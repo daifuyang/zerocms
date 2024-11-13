@@ -1,0 +1,8 @@
+Debug: true
+Name: admin-api
+Host: 0.0.0.0
+Port: 8888
+DataSource: root:123456@tcp(localhost:3306)/zerocms?charset=utf8mb4&parseTime=True&loc=Local
+Cache:
+  - Host: localhost:6379
+TokenSecretKey: "zerocms"

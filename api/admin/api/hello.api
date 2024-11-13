@@ -1,0 +1,28 @@
+syntax = "v1"
+import  "rest.api"
+
+info(
+    title: "type title here"
+    desc: "type desc here"
+    author: "type author here"
+    email: "type email here"
+    version: "type version here"
+)
+
+type HelloData struct {
+    Id int64 `json:"id"`
+}
+
+type HelloResp {
+    Rest
+    Data HelloData `json:"data"`
+}
+
+@server (
+    prefix: /api/v1/admin
+    middleware: JwtMiddleware
+)
+service admin-api {
+    @handler hello
+    get /hello returns (HelloResp)
+}

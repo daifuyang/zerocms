@@ -1,0 +1,55 @@
+syntax = "v1"
+import "rest.api"
+
+info(
+    title: "Role Management API"
+    desc: "API for managing roles in the admin system."
+    author: "daifuyang"
+    email: "1140444693@qq.com"
+    version: "1.0.0"
+)
+
+type RoleReq {
+    ParentId int `json:"parentId,optional"`
+    Name string `json:"name"`
+    Description string `json:"description,optional"`
+    Sort int `json:"sort,optional"`
+    Status int `json:"status,optional"`
+}
+
+type Role {
+
+}
+
+type RoleResp {
+    Rest
+    Data []Role `json:"data"`
+}
+
+@server (
+    prefix: /api/v1/admin/roles
+    group: role
+    middleware: JwtMiddleware
+)
+service admin-api {
+
+    // 获取角色列表
+    @handler index
+    get /roles returns (RoleResp)
+
+    // 获取单个角色
+    @handler show
+    get /:id returns (RoleResp)
+
+    // 新增单个角色
+    @handler store
+    post / (RoleReq) returns (RoleResp)
+
+    // 更新单个角色
+    @handler update
+    put / (RoleReq) returns (RoleResp)
+
+    // 删除角色
+    @handler destroy
+    delete /:id returns (RoleResp)
+}

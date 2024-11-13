@@ -1,0 +1,6 @@
+syntax = "v1"
+
+type Rest {
+    Code int    `json:"code"`
+    Msg  string `json:"msg"`
+}

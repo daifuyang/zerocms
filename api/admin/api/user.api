@@ -1,0 +1,37 @@
+syntax = "v1"
+import  "rest.api"
+
+info(
+    title: "User Service"
+    desc: "User Login API"
+    author: "daifuyang"
+    version: "1.0"
+)
+
+type LoginReq {
+    Username string `json:"username"`
+    Password string `json:"password"`
+}
+
+// Token结构定义
+type TokenData struct {
+    AccessToken  string `json:"access_token"`
+    ExpiresAt    int64  `json:"expires_at"`
+    RefreshToken string `json:"refresh_token"`
+    ReExpiresAt  int64  `json:"re_expires_at"`
+}
+
+type LoginResp {
+    Rest
+    Data TokenData `json:"data"`
+}
+
+@server (
+    prefix: /api/v1/admin
+    group: user
+)
+service admin-api {
+    // 定义登录接口
+    @handler login
+    post /login (LoginReq) returns (LoginResp)
+}
