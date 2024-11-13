@@ -1,0 +1,7 @@
+syntax = "v1"
+
+type Paginate {
+    Current int64 `form:"current,optional,default=1" json:"current,optional"`
+    PageSize int64 `form:"pageSize,optional,default=10" json:"pageSize,optional"`
+    Total int64 `json:"total,optional"`
+}

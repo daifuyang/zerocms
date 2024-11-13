@@ -40,8 +40,10 @@ type (
 
 	SysRole struct {
 		Id          int64          `db:"id"`
+		ParentId    int64          `db:"parent_id"`
 		Name        string         `db:"name"`
 		Description sql.NullString `db:"description"`
+		Level       sql.NullString `db:"level"`
 		Sort        int64          `db:"sort"`
 		Status      int64          `db:"status"`
 		CreatedAt   time.Time      `db:"created_at"`
@@ -93,8 +95,8 @@ func (m *defaultSysRoleModel) FindOne(ctx context.Context, id int64) (*SysRole, 
 func (m *defaultSysRoleModel) Insert(ctx context.Context, data *SysRole) (sql.Result, error) {
 	sysRoleIdKey := fmt.Sprintf("%s%v", cacheSysRoleIdPrefix, data.Id)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?)", m.table, sysRoleRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.Name, data.Description, data.Sort, data.Status, data.DeletedAt)
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?)", m.table, sysRoleRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.ParentId, data.Name, data.Description, data.Level, data.Sort, data.Status, data.DeletedAt)
 	}, sysRoleIdKey)
 	return ret, err
 }
@@ -103,7 +105,7 @@ func (m *defaultSysRoleModel) Update(ctx context.Context, data *SysRole) error {
 	sysRoleIdKey := fmt.Sprintf("%s%v", cacheSysRoleIdPrefix, data.Id)
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, sysRoleRowsWithPlaceHolder)
-		return conn.ExecCtx(ctx, query, data.Name, data.Description, data.Sort, data.Status, data.DeletedAt, data.Id)
+		return conn.ExecCtx(ctx, query, data.ParentId, data.Name, data.Description, data.Level, data.Sort, data.Status, data.DeletedAt, data.Id)
 	}, sysRoleIdKey)
 	return err
 }

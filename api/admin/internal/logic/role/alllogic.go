@@ -2,7 +2,6 @@ package role
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"time"
 
@@ -12,38 +11,23 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type IndexLogic struct {
+type AllLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewIndexLogic(ctx context.Context, svcCtx *svc.ServiceContext) *IndexLogic {
-	return &IndexLogic{
+func NewAllLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AllLogic {
+	return &AllLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *IndexLogic) Index(req *types.RoleReq) (resp *types.IndexRoleResp, err error) {
-
-	// 获取请求中的分页参数
-	current := req.Current   // 当前页，默认值为1
-	pageSize := req.PageSize // 每页数量，默认值为10
-
-	if current < 0 {
-		return nil, errors.New("分页参数错误！")
-	}
-
-	// 查询角色总数
-	totalCount, err := l.svcCtx.RoleModel.Count(l.ctx)
-	if err != nil {
-		return nil, fmt.Errorf("获取角色总数失败: %v", err)
-	}
-
+func (l *AllLogic) All(req *types.RoleReq) (resp *types.AllRoleResp, err error) {
 	// 查询角色列表
-	roles, err := l.svcCtx.RoleModel.List(l.ctx, current, pageSize)
+	roles, err := l.svcCtx.RoleModel.List(l.ctx, 1, 0)
 	if err != nil {
 		return nil, fmt.Errorf("获取角色列表失败: %v", err)
 	}
@@ -72,6 +56,7 @@ func (l *IndexLogic) Index(req *types.RoleReq) (resp *types.IndexRoleResp, err e
 		// 构建角色对象
 		roleList = append(roleList, types.Role{
 			Id:          role.Id,
+			ParentId:    role.ParentId,
 			Name:        role.Name,
 			Description: description,
 			Level:       level,
@@ -86,16 +71,46 @@ func (l *IndexLogic) Index(req *types.RoleReq) (resp *types.IndexRoleResp, err e
 		})
 	}
 
-	resp = &types.IndexRoleResp{
+	data := listToTree(roleList)
+
+	resp = &types.AllRoleResp{
 		Rest: new(types.Rest).Success("获取成功！"),
-		Data: types.PaginateRole{
-			Paginate: types.Paginate{
-				Current:  current,
-				PageSize: pageSize,
-				Total:    totalCount,
-			},
-			Data: roleList,
-		},
+		Data: data,
 	}
 	return
+}
+
+func listToTree(roles []types.Role) []*types.Role {
+	// 创建一个map来根据角色的 Id 快速查找对应的角色
+	roleMap := make(map[int64]*types.Role)
+
+	// 生成树形结构的切片
+	var tree []*types.Role
+
+	for i := range roles {
+		roleMap[roles[i].Id] = &roles[i]
+	}
+
+	// 遍历角色列表，构建树形结构
+
+	for i := range roles {
+		role := &roles[i]
+		// 如果角色的 ParentId 是 0 或者 ParentId 不在 roles 中，说明该角色是根节点
+		if role.ParentId == 0 {
+			// 将根节点加入树形结构中
+			tree = append(tree, role)
+		} else {
+			// 将当前角色添加到其父节点的Children中
+			parentRole, exists := roleMap[role.ParentId]
+			if exists {
+				// 这里我们确保父角色的Children已初始化
+				if parentRole.Children == nil {
+					parentRole.Children = make([]*types.Role, 0)
+				}
+				// 将子角色添加到父角色的Children
+				parentRole.Children = append(parentRole.Children, role)
+			}
+		}
+	}
+	return tree
 }

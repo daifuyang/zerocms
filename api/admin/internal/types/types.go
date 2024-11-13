@@ -32,18 +32,61 @@ type HelloResp struct {
 	Data HelloData `json:"data"`
 }
 
+type ShowRoleReq struct {
+	Id int64 `path:"id,optional"`
+}
+
 type RoleReq struct {
-	ParentId    int    `json:"parentId,optional"`
+	Id          int64  `path:"id,optional"`
+	ParentId    int64  `json:"parentId,optional"`
 	Name        string `json:"name"`
 	Description string `json:"description,optional"`
-	Sort        int    `json:"sort,optional"`
-	Status      int    `json:"status,optional"`
+	Sort        int64  `json:"sort,optional"`
+	Status      int64  `json:"status,optional"`
+	Paginate
 }
 
 type Role struct {
+	Id          int64  `json:"id"`
+	ParentId    int64  `json:"parentId"`
+	Name        string `json:"name"`
+	Description string `json:"description,omitempty"`
+	Level       string `json:"level"`
+	Sort        int64  `json:"sort"`
+	Status      int64  `json:"status"`
+	Date
+	Children []*Role `json:"children,omitempty"`
 }
 
 type RoleResp struct {
 	Rest
+	Data Role `json:"data"`
+}
+
+type PaginateRole struct {
+	Paginate
 	Data []Role `json:"data"`
+}
+
+type IndexRoleResp struct {
+	Rest
+	Data PaginateRole `json:"data"`
+}
+
+type AllRoleResp struct {
+	Rest
+	Data []*Role `json:"data"`
+}
+
+type Date struct {
+	CreatedAt   int64  `json:"createAt,optional"`
+	CreatedTime string `json:"createdTime,optional"`
+	UpdatedAt   int64  `json:"updatedAt,optional"`
+	UpdatedTime string `json:"updatedTime,optional"`
+}
+
+type Paginate struct {
+	Current  int64 `form:"current,optional,default=1" json:"current,optional"`
+	PageSize int64 `form:"pageSize,optional,default=10" json:"pageSize,optional"`
+	Total    int64 `json:"total,optional"`
 }

@@ -9,16 +9,16 @@ import (
 	"zerocms/api/admin/internal/types"
 )
 
-func ShowHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func AllHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.ShowRoleReq
+		var req types.RoleReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := role.NewShowLogic(r.Context(), svcCtx)
-		resp, err := l.Show(&req)
+		l := role.NewAllLogic(r.Context(), svcCtx)
+		resp, err := l.All(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {

@@ -1,5 +1,9 @@
 syntax = "v1"
-import "rest.api"
+import (
+    "rest.api"
+    "date.api"
+    "paginate.api"
+)
 
 info(
     title: "Role Management API"
@@ -9,21 +13,50 @@ info(
     version: "1.0.0"
 )
 
+type ShowRoleReq {
+    Id int64  `path:"id,optional"`
+}
+
 type RoleReq {
-    ParentId int `json:"parentId,optional"`
+    Id int64  `path:"id,optional"`
+    ParentId int64 `json:"parentId,optional"`
     Name string `json:"name"`
     Description string `json:"description,optional"`
-    Sort int `json:"sort,optional"`
-    Status int `json:"status,optional"`
+    Sort int64 `json:"sort,optional"`
+    Status int64 `json:"status,optional"`
+    Paginate
 }
 
 type Role {
-
+    Id int64  `json:"id"`
+    ParentId int64 `json:"parentId"`
+    Name string `json:"name"`
+    Description string `json:"description,omitempty"`
+    Level string `json:"level"`
+    Sort  int64 `json:"sort"`
+    Status int64 `json:"status"`
+    Date
+    Children []*Role `json:"children,omitempty"`
 }
 
 type RoleResp {
     Rest
+    Data Role `json:"data"`
+}
+
+type PaginateRole {
+    Paginate
     Data []Role `json:"data"`
+}
+
+type IndexRoleResp {
+    Rest
+    Data PaginateRole `json:"data"`
+}
+
+type AllRoleResp {
+    Rest
+    Data []*Role `json:"data"`
 }
 
 @server (
@@ -33,13 +66,17 @@ type RoleResp {
 )
 service admin-api {
 
-    // 获取角色列表
+    // 获取角色列表分页
     @handler index
-    get /roles returns (RoleResp)
+    get / (RoleReq) returns (IndexRoleResp)
+
+    // 获取角色列表不分页
+    @handler all
+    get /all (RoleReq) returns (AllRoleResp)
 
     // 获取单个角色
     @handler show
-    get /:id returns (RoleResp)
+    get /:id (ShowRoleReq) returns (RoleResp)
 
     // 新增单个角色
     @handler store
@@ -47,9 +84,9 @@ service admin-api {
 
     // 更新单个角色
     @handler update
-    put / (RoleReq) returns (RoleResp)
+    put /:id (RoleReq) returns (RoleResp)
 
     // 删除角色
     @handler destroy
-    delete /:id returns (RoleResp)
+    delete /:id(ShowRoleReq) returns (RoleResp)
 }

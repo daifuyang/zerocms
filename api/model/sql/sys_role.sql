@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS `sys_role` (
   `parent_id` int(11) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 0,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `level` varchar(191) COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   `sort` tinyint(4) NOT NULL DEFAULT '1',
   `status` tinyint(4) NOT NULL DEFAULT '1',
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,

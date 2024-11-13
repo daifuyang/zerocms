@@ -1,0 +1,8 @@
+syntax = "v1"
+
+type Date {
+    CreatedAt int64 `json:"createAt,optional"`
+    CreatedTime string `json:"createdTime,optional"`
+    UpdatedAt int64 `json:"updatedAt,optional"`
+    UpdatedTime string `json:"updatedTime,optional"`
+}

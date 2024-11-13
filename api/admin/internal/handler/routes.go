@@ -43,8 +43,13 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			[]rest.Route{
 				{
 					Method:  http.MethodGet,
-					Path:    "/roles",
+					Path:    "/",
 					Handler: role.IndexHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/all",
+					Handler: role.AllHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodGet,
@@ -58,7 +63,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				},
 				{
 					Method:  http.MethodPut,
-					Path:    "/",
+					Path:    "/:id",
 					Handler: role.UpdateHandler(serverCtx),
 				},
 				{
