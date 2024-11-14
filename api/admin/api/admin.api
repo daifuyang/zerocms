@@ -1,7 +1,12 @@
 syntax = "v1"
 
 import (
+	"rest.api"
+	"date.api"
+	"paginate.api"
 	"user.api"
 	"hello.api"
 	"role.api"
+	"menu.api"
+	"department.api"
 )

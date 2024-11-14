@@ -1,39 +1,34 @@
 syntax = "v1"
+
 import (
     "rest.api"
     "date.api"
     "paginate.api"
 )
 
-info(
-    title: "Role Management API"
-    desc: "API for managing roles in the admin system."
-    author: "daifuyang"
-    email: "1140444693@qq.com"
-    version: "1.0.0"
-)
-
 type ShowRoleReq {
-    Id int64  `path:"id,optional"`
+    Id int64 `path:"id,optional"`
 }
 
 type RoleReq {
-    Id int64  `path:"id,optional"`
+    Id int64 `path:"id,optional"`
     ParentId int64 `json:"parentId,optional"`
     Name string `json:"name"`
     Description string `json:"description,optional"`
+    MenuIds []*int64 `json:"menuIds,optional"`
     Sort int64 `json:"sort,optional"`
     Status int64 `json:"status,optional"`
     Paginate
 }
 
 type Role {
-    Id int64  `json:"id"`
+    Id int64 `json:"id"`
     ParentId int64 `json:"parentId"`
     Name string `json:"name"`
     Description string `json:"description,omitempty"`
+    MenuIds []*int64 `json:"menuIds,omitempty"`
     Level string `json:"level"`
-    Sort  int64 `json:"sort"`
+    Sort int64 `json:"sort"`
     Status int64 `json:"status"`
     Date
     Children []*Role `json:"children,omitempty"`
@@ -59,7 +54,25 @@ type AllRoleResp {
     Data []*Role `json:"data"`
 }
 
-@server (
+type DataScopeReq {
+    Id int64 `path:"id"`
+    DataScope int64 `json:"dataScope"`
+    DepartmentIds []*int64 `json:"departmentIds,optional"`
+}
+
+type DataScope {
+    Id int64 `path:"id"`
+    DataScope int64 `json:"dataScope"`
+    DepartmentIds []*int64 `json:"departmentIds,omitempty"`
+    roleName string `json:"roleName"`
+}
+
+type DataScopeResp {
+    Rest
+    Data DataScope `json:"data"`
+}
+
+@server(
     prefix: /api/v1/admin/roles
     group: role
     middleware: JwtMiddleware
@@ -88,5 +101,9 @@ service admin-api {
 
     // 删除角色
     @handler destroy
-    delete /:id(ShowRoleReq) returns (RoleResp)
+    delete /:id (ShowRoleReq) returns (RoleResp)
+
+    // 数据权限
+    @handler dataScope
+    put /data-scope/:id (DataScopeReq) returns (DataScopeResp)
 }

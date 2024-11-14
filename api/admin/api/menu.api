@@ -1,0 +1,92 @@
+syntax = "v1"
+
+type MenuReq struct {
+    MenuId int64 `path:"menuId,optional"`                                             // path参数：菜单ID，作为可选项
+    MenuName string `json:"menuName,optional"`                                        // 模糊查询菜单名称，必传字段
+    ParentId int64 `json:"parentId,optional"`                                         // 查询指定父级菜单的子菜单，可选字段
+    Status int64 `json:"status,optional"`                                             // 菜单状态：启用或禁用，可选字段
+    Visible int64 `json:"visible,optional"`                                           // 菜单是否可见：0 - 不可见，1 - 可见，可选字段
+    Order int64 `json:"order,optional"`                                               // 排序顺序，可选字段
+    Path string `json:"path,optional"`                                                // 菜单路径，可选字段
+    Component string `json:"component,optional"`                                      // 菜单组件，可选字段
+    Query string `json:"query,optional"`                                              // 菜单查询，可选字段
+    IsFrame int64 `json:"isFrame,optional"`                                           // 是否是框架菜单，可选字段
+    IsCache int64 `json:"isCache,optional"`                                           // 是否缓存，可选字段
+    MenuType string `json:"menuType,optional"`                                        // 菜单类型，可选字段
+    Perms string `json:"perms,optional"`                                              // 菜单权限，可选字段
+    Icon string `json:"icon,optional"`                                                // 菜单图标，可选字段
+    Remark string `json:"remark,optional"`                                            // 菜单备注，可选字段
+}
+
+type Menu struct {
+    MenuId int64 `json:"menuId"`
+    MenuName string `json:"menuName"`
+    ParentId int64 `json:"parentId"`
+    Order int64 `json:"order"`
+    Path string `json:"path"`
+    Component string `json:"component"`
+    Query string `json:"query"`
+    IsFrame int64 `json:"isFrame"`
+    IsCache int64 `json:"isCache"`
+    MenuType string `json:"menuType"`
+    Visible int64 `json:"visible"`
+    Status int64 `json:"status"`
+    Perms string `json:"perms"`
+    Icon string `json:"icon"`
+    CreatedId int64 `json:"createdId"`
+    CreatedBy string `json:"createdBy"`
+    UpdatedId int64 `json:"updatedId"`
+    UpdatedBy string `json:"updatedBy"`
+    Remark string `json:"remark"`
+    Children []*Menu `json:"children,omitempty"`
+    Date
+}
+
+type IndexMenuResp {
+
+}
+
+type AllMenuResp {
+    Rest
+    Data []*Menu `json:"data"`
+}
+
+type ShowMenuReq {
+
+}
+
+type MenuResp {
+
+}
+
+@server(
+    prefix: /api/v1/admin/menus
+    group: menu
+    middleware: JwtMiddleware
+)
+service admin-api {
+
+    // 获取菜单列表分页
+    @handler index
+    get / (MenuReq) returns (IndexMenuResp)
+
+    // 获取角色列表不分页
+    @handler all
+    get /all (MenuReq) returns (AllMenuResp)
+
+    // 获取单个角色
+    @handler show
+    get /:id (ShowMenuReq) returns (MenuResp)
+
+    // 新增单个角色
+    @handler store
+    post / (MenuReq) returns (MenuResp)
+
+    // 更新单个角色
+    @handler update
+    put /:id (MenuReq) returns (MenuResp)
+
+    // 删除角色
+    @handler destroy
+    delete /:id (ShowMenuReq) returns (MenuResp)
+}

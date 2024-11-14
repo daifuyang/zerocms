@@ -1,0 +1,93 @@
+syntax = "v1"
+
+// 请求体：获取部门信息
+type ShowDepartmentReq {
+    Id int64 `path:"id,optional"`
+}
+
+// 请求体：新增/更新部门信息
+type DepartmentReq {
+    Id int64 `path:"id,optional"`
+    ParentId int64 `json:"parentId,optional"`                 // 父级部门ID
+    Name string `json:"name"`                                 // 部门名称
+    Sort int64 `json:"sort,optional"`                         // 排序字段
+    Leader string `json:"leader,optional"`                    // 部门负责人
+    Phone string `json:"phone,optional"`                      // 联系电话
+    Email string `json:"email,optional"`                      // 部门邮箱
+    Status *int64 `json:"status,optional"`                    // 部门状态（如启用或禁用）
+    Paginate
+}
+
+// 部门结构
+type Department struct {
+    Id int64 `json:"id"`                                // 部门ID
+    ParentId int64 `json:"parentId,omitempty"`          // 父级部门ID
+    Ancestors string `json:"ancestors,omitempty"`       // 上级部门的祖先ID路径（可以自动生成）
+    Name string `json:"name"`                           // 部门名称
+    Sort int64 `json:"sort,omitempty"`                  // 排序字段
+    Leader string `json:"leader,omitempty"`             // 部门负责人
+    Phone string `json:"phone,omitempty"`               // 联系电话
+    Email string `json:"email,omitempty"`               // 部门邮箱
+    Status int64 `json:"status"`                        // 部门状态（如启用或禁用）
+    CreateBy int64 `json:"createBy,omitempty"`          // 创建者ID
+    UpdateBy int64 `json:"updateBy,omitempty"`          // 更新者ID
+    DeletedAt int64 `json:"deletedAt,omitempty"`        // 删除时间
+    Date
+    Children []*Department `json:"children,omitempty"`  // 子部门
+}
+
+// 返回单个部门响应体
+type DepartmentResp {
+    Rest
+    Data Department `json:"data"`
+}
+
+// 返回分页部门列表
+type PaginateDepartment {
+    Paginate
+    Data []Department `json:"data"`
+}
+
+// 返回分页部门列表响应体
+type IndexDepartmentResp {
+    Rest
+    Data PaginateDepartment `json:"data"`
+}
+
+// 返回所有部门列表
+type AllDepartmentResp {
+    Rest
+    Data []*Department `json:"data"`
+}
+
+@server(
+    prefix: /api/v1/admin/departments
+    group: department
+    middleware: JwtMiddleware
+)
+service admin-api {
+
+    // 获取部门列表分页
+    @handler index
+    get / (DepartmentReq) returns (IndexDepartmentResp)
+
+    // 获取所有部门列表
+    @handler all
+    get /all (DepartmentReq) returns (AllDepartmentResp)
+
+    // 获取单个部门信息
+    @handler show
+    get /:id (ShowDepartmentReq) returns (DepartmentResp)
+
+    // 新增单个部门
+    @handler store
+    post / (DepartmentReq) returns (DepartmentResp)
+
+    // 更新单个部门信息
+    @handler update
+    put /:id (DepartmentReq) returns (DepartmentResp)
+
+    // 删除部门
+    @handler destroy
+    delete /:id (ShowDepartmentReq) returns (DepartmentResp)
+}
