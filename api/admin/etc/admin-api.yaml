@@ -1,4 +1,5 @@
-Debug: true
+Debug: false
+LockFile: "public/install/install.lock"
 Name: admin-api
 Host: 0.0.0.0
 Port: 8888

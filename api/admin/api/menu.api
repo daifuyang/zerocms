@@ -62,7 +62,7 @@ type MenuResp {
 @server(
     prefix: /api/v1/admin/menus
     group: menu
-    middleware: JwtMiddleware
+    middleware: JwtMiddleware, MenuRoleMiddleware
 )
 service admin-api {
 

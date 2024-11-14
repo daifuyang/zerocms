@@ -63,7 +63,7 @@ type AllDepartmentResp {
 @server(
     prefix: /api/v1/admin/departments
     group: department
-    middleware: JwtMiddleware
+    middleware: JwtMiddleware, MenuRoleMiddleware
 )
 service admin-api {
 

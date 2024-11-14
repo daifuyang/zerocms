@@ -20,18 +20,23 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Table structure for sys_role
 -- ----------------------------
-CREATE TABLE IF NOT EXISTS `sys_role` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `parent_id` int(11) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 0,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `level` varchar(191) COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
-  `sort` tinyint(4) NOT NULL DEFAULT '1',
-  `status` tinyint(4) NOT NULL DEFAULT '1',
-  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `deleted_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE IF NOT EXISTS `sys_role`
+(
+    `id`          int(11)                                 NOT NULL AUTO_INCREMENT,
+    `parent_id`   int(11) COLLATE utf8mb4_unicode_ci      NOT NULL DEFAULT 0,
+    `name`        varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+    `description` varchar(191) COLLATE utf8mb4_unicode_ci          DEFAULT NULL,
+    `level`       varchar(191) COLLATE utf8mb4_unicode_ci NULL     DEFAULT NULL,
+    `sort`        tinyint(4)                              NOT NULL DEFAULT '1',
+    `data_scope`  tinyint(3)                              NOT NULL default '1' comment '数据范围（1：全部数据权限 2：自定数据权限 3：本部门数据权限 4：本部门及以下数据权限）',
+    `status`      tinyint(4)                              NOT NULL DEFAULT '1',
+    `created_at`  datetime                                NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`  datetime                                NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at`  datetime                                         DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;

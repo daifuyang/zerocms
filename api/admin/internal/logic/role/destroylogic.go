@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"time"
-	"zerocms/api/model"
+	"zerocms/api/model/role"
 
 	"zerocms/api/admin/internal/svc"
 	"zerocms/api/admin/internal/types"
@@ -33,7 +33,7 @@ func (l *DestroyLogic) Destroy(req *types.ShowRoleReq) (resp *types.RoleResp, er
 		return nil, err
 	}
 
-	deleteRole := &model.SysRole{
+	deleteRole := &role.SysRole{
 		Id:          id,
 		ParentId:    existRole.ParentId,
 		Name:        existRole.Name,

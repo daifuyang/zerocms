@@ -8,7 +8,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"strconv"
 	"time"
-	"zerocms/api/model"
+	"zerocms/api/model/user"
 	"zerocms/utils"
 
 	"zerocms/api/admin/internal/svc"
@@ -54,7 +54,7 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 	}
 
 	// 存入sql中
-	_, err = l.svcCtx.UserTokenModel.Insert(l.ctx, &model.SysUserToken{
+	_, err = l.svcCtx.UserTokenModel.Insert(l.ctx, &user.SysUserToken{
 		UserId:      userModel.Id,
 		AccessToken: data.AccessToken,
 		ExpiresAt: sql.NullTime{

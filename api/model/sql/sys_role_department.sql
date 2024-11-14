@@ -20,11 +20,12 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Table structure for sys_role_dept
 -- ----------------------------
-DROP TABLE IF EXISTS `sys_role_dept`;
-CREATE TABLE `sys_role_dept` (
-  `role_id` bigint(20) NOT NULL COMMENT '角色ID',
-  `dept_id` bigint(20) NOT NULL COMMENT '部门ID',
-  PRIMARY KEY (`role_id`,`dept_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='角色和部门关联表';
+CREATE TABLE IF NOT EXISTS `sys_role_department`
+(
+    `role_id`       int(11) NOT NULL DEFAULT 0 COMMENT '角色ID',
+    `department_id` int(11) NOT NULL DEFAULT 0 COMMENT '部门ID',
+    PRIMARY KEY (role_id, department_id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='角色和部门关联表';
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -4,13 +4,13 @@ import (
 	"context"
 	"database/sql"
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
-	"zerocms/api/model"
+	"zerocms/api/model/user"
 	"zerocms/utils"
 )
 
 // 创建默认管理员
 
-func createAdmin(userModel model.SysUserModel) (err error) {
+func createAdmin(userModel user.SysUserModel) (err error) {
 	_, err = userModel.FindOne(context.Background(), 1)
 	if err == sqlc.ErrNotFound {
 		// 生成盐值
@@ -26,7 +26,7 @@ func createAdmin(userModel model.SysUserModel) (err error) {
 			return err
 		}
 
-		newUserModel := &model.SysUser{
+		newUserModel := &user.SysUser{
 			LoginName: sql.NullString{
 				String: "admin",
 				Valid:  true, // 表示这是一个有效的字符串值

@@ -2,7 +2,6 @@ package logic
 
 import (
 	"context"
-	"fmt"
 	"zerocms/api/admin/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -25,7 +24,7 @@ func NewHelloLogic(ctx context.Context, svcCtx *svc.ServiceContext) *HelloLogic 
 
 func (l *HelloLogic) Hello() (resp *types.HelloResp, err error) {
 	userId := l.ctx.Value("userId").(int64)
-	fmt.Println("userId", userId)
+
 	return &types.HelloResp{
 		Rest: new(types.Rest).Success("获取成功！"),
 		Data: types.HelloData{

@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"io"
 	"os"
 )
 
@@ -25,4 +26,20 @@ func CreateFile(filename string) error {
 	}
 	defer file.Close()
 	return nil
+}
+
+func ReadFile(filePath string) ([]byte, error) {
+	// 打开 JSON 文件
+	file, err := os.Open(filePath)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	// 读取文件内容
+	data, err := io.ReadAll(file)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
 }

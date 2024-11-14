@@ -1,4 +1,4 @@
-package model
+package role
 
 import (
 	"context"
@@ -15,6 +15,7 @@ type (
 	// and implement the added methods in customSysRoleModel.
 	SysRoleModel interface {
 		sysRoleModel
+		WithSession(session sqlx.Session) SysRoleModel
 		First(ctx context.Context, id int64) (*SysRole, error)
 		Count(ctx context.Context) (int64, error)
 		List(ctx context.Context, page, limit int64) ([]*SysRole, error)
@@ -67,4 +68,12 @@ func NewSysRoleModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Option)
 	return &customSysRoleModel{
 		defaultSysRoleModel: newSysRoleModel(conn, c, opts...),
 	}
+}
+
+func (c *customSysRoleModel) WithSession(session sqlx.Session) SysRoleModel {
+	return &customSysRoleModel{
+		defaultSysRoleModel: &defaultSysRoleModel{
+			CachedConn: c.CachedConn.WithSession(session),
+			table:      "`sys_role`",
+		}}
 }

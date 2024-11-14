@@ -4,6 +4,8 @@ package handler
 import (
 	"net/http"
 
+	department "zerocms/api/admin/internal/handler/department"
+	menu "zerocms/api/admin/internal/handler/menu"
 	role "zerocms/api/admin/internal/handler/role"
 	user "zerocms/api/admin/internal/handler/user"
 	"zerocms/api/admin/internal/svc"
@@ -25,7 +27,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 
 	server.AddRoutes(
 		rest.WithMiddlewares(
-			[]rest.Middleware{serverCtx.JwtMiddleware},
+			[]rest.Middleware{serverCtx.JwtMiddleware, serverCtx.MenuRoleMiddleware},
 			[]rest.Route{
 				{
 					Method:  http.MethodGet,
@@ -39,7 +41,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 
 	server.AddRoutes(
 		rest.WithMiddlewares(
-			[]rest.Middleware{serverCtx.JwtMiddleware},
+			[]rest.Middleware{serverCtx.JwtMiddleware, serverCtx.MenuRoleMiddleware},
 			[]rest.Route{
 				{
 					Method:  http.MethodGet,
@@ -71,8 +73,91 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Path:    "/:id",
 					Handler: role.DestroyHandler(serverCtx),
 				},
+				{
+					Method:  http.MethodPut,
+					Path:    "/data-scope/:id",
+					Handler: role.DataScopeHandler(serverCtx),
+				},
 			}...,
 		),
 		rest.WithPrefix("/api/v1/admin/roles"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.JwtMiddleware, serverCtx.MenuRoleMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/",
+					Handler: menu.IndexHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/all",
+					Handler: menu.AllHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/:id",
+					Handler: menu.ShowHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/",
+					Handler: menu.StoreHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPut,
+					Path:    "/:id",
+					Handler: menu.UpdateHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodDelete,
+					Path:    "/:id",
+					Handler: menu.DestroyHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/v1/admin/menus"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.JwtMiddleware, serverCtx.MenuRoleMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/",
+					Handler: department.IndexHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/all",
+					Handler: department.AllHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/:id",
+					Handler: department.ShowHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/",
+					Handler: department.StoreHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPut,
+					Path:    "/:id",
+					Handler: department.UpdateHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodDelete,
+					Path:    "/:id",
+					Handler: department.DestroyHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/api/v1/admin/departments"),
 	)
 }

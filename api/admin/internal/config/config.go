@@ -8,6 +8,7 @@ import (
 type Config struct {
 	rest.RestConf
 	Debug          bool
+	LockFile       string
 	DataSource     string
 	TokenSecretKey string
 	Cache          cache.CacheConf

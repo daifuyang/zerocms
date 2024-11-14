@@ -4,14 +4,14 @@ import (
 	"context"
 	"net/http"
 	"strings"
-	"zerocms/api/model"
+	"zerocms/api/model/user"
 )
 
 type JwtMiddleware struct {
-	UserTokenModel model.SysUserTokenModel
+	UserTokenModel user.SysUserTokenModel
 }
 
-func NewJwtMiddleware(userTokenModel model.SysUserTokenModel) *JwtMiddleware {
+func NewJwtMiddleware(userTokenModel user.SysUserTokenModel) *JwtMiddleware {
 	return &JwtMiddleware{
 		UserTokenModel: userTokenModel,
 	}
